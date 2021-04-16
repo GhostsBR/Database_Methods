@@ -1,4 +1,19 @@
 import MySQLdb
+import InputVerifier
+iv = InputVerifier.InputVeirfy()
+
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 
 class Database:
     conn = MySQLdb.connect(db="proway", host="localhost", user="root")
@@ -7,39 +22,33 @@ class Database:
 
 class Users(Database):
     def insert_user(self, fullname, birth, cpf, height):
+        iv.verifyinputs(fullname, birth, cpf, height)
         try:
             self.cursor.execute(f"INSERT INTO users (fullname, birth, cpf, height) VALUES "
                                 f"('{fullname}', '{birth}', '{cpf}', '{height}')")
             self.conn.commit()
-            print("Usuário adiconado com sucesso ao banco de dados!")
+            print(f"{bcolors.OKGREEN}Usuário adiconado com sucesso ao banco de dados!{bcolors.ENDC}")
         except:
             print("Não foi possivel inserir o usuário no banco de dados!")
         return True
 
-    def update_user_by_id(self, id, fullname, birth, cpf, height):
+    def update_user(self, id, fullname, birth, cpf, height):
+        iv.verifyinputs(fullname, birth, cpf, height)
         try:
             self.cursor.execute(f"UPDATE users SET fullname='{fullname}', birth='{birth}', cpf='{cpf}', height='{height}' "
                                 f"WHERE id='{id}'")
             self.conn.commit()
         except:
-            print("Não foi possível atualizar o usuário!")
-        return True
-
-    def update_user_by_cpf(self, fullname, birth, cpf, height):
-        try:
-            self.cursor.execute(f"UPDATE users SET fullname='{fullname}', birth='{birth}', cpf='{cpf}', height='{height}' "
-                                f"WHERE cpf='{cpf}'")
-            self.conn.commit()
-        except:
-            print("Não foi possível atualizar o usuário!")
+            print(f"{bcolors.FAIL}Não foi possível atualizar o usuário!{bcolors.ENDC}")
         return True
 
     def update_all(self, fullname, birth, cpf, height):
+        iv.verifyinputs(fullname, birth, cpf, height)
         try:
             self.cursor.execute(f"UPDATE users SET fullname='{fullname}', birth='{birth}', cpf='{cpf}', height='{height}'")
             self.conn.commit()
         except:
-            print("Não foi possível atualizar todos os usuários!")
+            print(f"{bcolors.FAIL}Não foi possível atualizar todos os usuários!{bcolors.ENDC}")
             return False
         return True
 
@@ -48,7 +57,7 @@ class Users(Database):
             self.cursor.execute("SELECT * FROM users")
             return self.cursor.fetchall()
         except:
-            print("Não foi possível localizar os usuários!")
+            print(f"{bcolors.FAIL}Não foi possível localizar os usuários!{bcolors.ENDC}")
             return False
 
     def list_users(self):
@@ -69,7 +78,7 @@ class Users(Database):
             self.cursor.execute(f"SELECT * FROM users WHERE {field}={value}")
             return self.cursor.fetchall()
         except:
-            print("Não foi possível localizar o usuário!")
+            print(f"{bcolors.FAIL}Não foi possível localizar o usuário!{bcolors.ENDC}")
             return False
 
     def delete_user(self, field, value):
@@ -77,7 +86,7 @@ class Users(Database):
             self.cursor.execute(f"DELETE FROM users WHERE {field}={value}")
             self.conn.commit()
         except:
-            print("Não foi possível apagar o usuário!")
+            print(f"{bcolors.FAIL}Não foi possível apagar o usuário!{bcolors.ENDC}")
             return False
         return True
 
@@ -86,6 +95,6 @@ class Users(Database):
             self.cursor.execute(f"DELETE FROM users")
             self.conn.commit()
         except:
-            print("Não foi possível apagar todos os usuários!")
+            print(f"{bcolors.FAIL}Não foi possível apagar todos os usuários!{bcolors.ENDC}")
             return False
         return True
