@@ -50,7 +50,7 @@ class InputVeirfy:
             return False
         if not len(date[0]) == 2:
             return False
-        if not  len(date[1]) == 2:
+        if not len(date[1]) == 2:
             return False
         if not len(date[2]) == 4:
             return False
