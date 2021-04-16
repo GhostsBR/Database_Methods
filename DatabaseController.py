@@ -74,7 +74,7 @@ class Users(Database):
 
     def delete_user(self, field, value):
         try:
-            self.cursor.execute(f"DELETE FROM users WHERE {field}={id}")
+            self.cursor.execute(f"DELETE FROM users WHERE {field}={value}")
             self.conn.commit()
         except:
             print("Não foi possível apagar o usuário!")
